@@ -4,7 +4,10 @@ body {
 }
 
 .header {
-  background-color: green;
+  background-color: gray;
+  color: white;
+  font-size: 25px;
+  font-weight: bold;
   padding: 10px;
   text-align: center;
 }
@@ -14,7 +17,7 @@ body {
   padding: 10px;
 }
 
-.expression-input {
+#expression-input {
   text-align: center;
 }
 

@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="styles.css">
-    <script src="main.js" defer></script>
+    <script src="main.js" type="module" defer></script>
   </head>
   <body>
     <div class="header">Uncertainty Propagation Calculator</div>
     <div class="var-manager-container"></div>
     <div class="expression-box">
-      <input class="expression-input" type="text" value="Enter expression">
+      <input id="expression-input" type="text" value="Enter expression">
       <button class="calculate-button">Calculate</button>
     </div>
     <div class="results"></div>

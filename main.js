@@ -1,4 +1,6 @@
-const expressionInput = document.querySelector(".expression-input");
+import * as math from "./math.js"
+
+const expressionInput = document.querySelector("#expression-input");
 let expression;
 
 expressionInput.addEventListener("focus", (e) => {
@@ -13,7 +15,6 @@ expressionInput.addEventListener("blur", (e) => {
 })
 
 const calculateButton = document.querySelector(".calculate-button");
-
 
 
 
