@@ -241,5 +241,24 @@ const substituteVariable = (node, variable, value) => {
   substituteVariable(node.rchild, variable, value);
 }
 
+const evaluateDerivative = (node, variable, value) => {
+  substituteVariable(node, variable, value + Math.sqrt(Number.EPSILON));
+  let fPlus = computeExpression(node);
+  substituteVariable(node, variable, value - Math.sqrt(Number.EPSILON));
+  let fMinus = computeExpression(node);
+  substituteVariable(node, variable, value);
+  return (fPlus - fMinus) / (2*Math.sqrt(Number.EPSILON));
+}
 
-
+const propagateUncertainty = (node, variable, value, delta) => {
+  if(!Array.isArray(variable)) {
+    return evaluateDerivative(node, variable, value) * delta;
+  }
+  let result = 0;
+  substituteVariable(node, value);
+  for(let i = 0; i < variable.length; ++ i) {
+    let derivative = evaluateDerivative(node, variable[i], value[i]);
+    result += derivative * derivative * delta[i] * delta[i];
+  }
+  return sqrt(result);
+}
