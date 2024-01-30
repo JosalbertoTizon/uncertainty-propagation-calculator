@@ -31,8 +31,8 @@ const Node = function() {
   this.operator_;
   this.function_;
   this.numberType;
-  this.lchild = Null;
-  this.rchild = Null;
+  this.lchild = null;
+  this.rchild = null;
 }
 
 const toEnum = (operatorString) => {
@@ -55,7 +55,7 @@ const skipWhitespace = () => {
 
 const getNumber = (node) => {
   let initialPos = pos;
-  while(typeof(inputString[pos]) === "number")
+  while(!isNaN(inputString[pos]) || inputString[pos] == ".")
     ++ pos;
   node.value = Number(inputString.slice(initialPos, pos));
 }
@@ -117,16 +117,16 @@ const readNumber = (node) => {
     signal = -1;
     ++ pos;
   }
-  if(typeof(inputString[pos]) === "number") {
+  if(!isNaN(inputString[pos])) {
     getNumber(node);
     node.value *= signal;
     node.numberType = NumberType.Numeric;
   }
-
   else {
     getVariable(node);
     node.numberType = NumberType.Variable
   }
+  node.isNumber = true;
 }
 
 const evaluateFunction = (node, value) => {
@@ -147,4 +147,99 @@ const evaluateFunction = (node, value) => {
           return value;
   }
 }
+
+const readExpression = (node) => {
+  node.lchild = new Node();
+  node.rchild = new Node();
+
+  skipWhitespace();
+  readFunction(node.lchild);
+  if(node.lchild.function_ != Function.NO_FUNCTION)
+    readExpression(node.lchild);
+  else readNumber(node.lchild);
+
+  skipWhitespace();
+
+  if(inputString[pos] == ")" || pos == inputString.length) {
+    node.operator_ = Operator.Plus;
+    node.isNumber = false;
+    node.rchild.isNumber = true;
+    node.rchild.value = 0;
+    ++ pos;
+    return node;
+  }
+
+  readOperator(node);
+
+  skipWhitespace();
+  readFunction(node.rchild);
+  if(node.rchild.function_ != Function.NO_FUNCTION)
+    readExpression(node.rchild);
+  else readNumber(node.rchild);
+
+  skipWhitespace();
+  while(inputString[pos] != ")" && pos != inputString.length) {
+    skipWhitespace();
+    let newNode = new Node();
+    readOperator(newNode);
+    if(newNode.operator_ == Operator.Times || newNode.operator_ == Operator.Divided) {
+      newNode.lchild = node.rchild;
+      newNode.rchild = new Node();
+      node.rchild = newNode;
+      skipWhitespace();
+      readFunction(newNode.rchild);
+      if(newNode.rchild.function_ != Function.NO_FUNCTION)
+        readExpression(newNode.rchild);
+      else readNumber(newNode.rchild);
+    }
+    else {
+      newNode.lchild = node;
+      newNode.rchild = new Node();
+      node = newNode;
+      skipWhitespace();
+      readFunction(node.rchild);
+      if(node.rchild.function_ != Function.NO_FUNCTION)
+        readExpression(node.rchild);
+      else readNumber(node.rchild);
+    }
+  }
+  ++ pos;
+  return node;
+}
+
+const computeExpression = (node) => {
+  let left, right;
+  if(!node.lchild.isNumber)
+    left = evaluateFunction(node.lchild, computeExpression(node.lchild));
+  else left = node.lchild.value;
+  if(!node.rchild.isNumber)
+    right = evaluateFunction(node.rchild, computeExpression(node.rchild));
+  else right = node.rchild.value;
+  switch(node.operator_) {
+    case Operator.Plus:
+      return left + right;
+  case Operator.Minus:
+      return left - right;
+  case Operator.Times:
+      return left * right;
+  case Operator.Divided:
+      return left / right;
+  }
+}
+
+const substituteVariable = (node, variable, value) => {
+  if(Array.isArray(variable)) {
+    for(let i = 0; i < variable.length; ++ i)
+      substituteVariable(node, variable[i], value[i]);
+    return;
+  }
+  if(node == null)
+    return;
+  if(node.isNumber && node.numberType == NumberType.Variable && node.variableName == variable)
+    node.value = value;
+  substituteVariable(node.lchild, variable, value);
+  substituteVariable(node.rchild, variable, value);
+}
+
+
 
