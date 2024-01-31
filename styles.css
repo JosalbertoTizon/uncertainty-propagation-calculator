@@ -14,24 +14,41 @@ body {
 
 .var-box {
   display: flex;
-  justify-content: center;  
+  justify-content: flex-start;
   gap: 5px;
   padding: 10px;
 }
 
+.var-box-right {
+  width: 100%;
+  margin-right: 100px;
+}
+
 .remove-variable {
   align-self: flex-start;
-  padding: 0 16px;
+  padding: 5px 16px;
+  margin-left: 50px;
+  border-radius: 5px;
 }
 
 .add-variable {
   display: block;
   margin: 10px auto;
-  padding: 0 30px;
+  padding: 5px 50px;
+  border-radius: 5px;
 }
 
-#variable-name {
-  padding: 0px;
+.variable {
+  display: flex;
+  gap: 5px;
+}
+
+.variable-name,
+.variable-value,
+.variable-error {
+  flex: 1;
+  padding: 5px 10px;
+  border-radius: 5px;
 }
 
 .expression-box {
