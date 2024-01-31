@@ -1,6 +1,11 @@
 let inputString;
 let pos;
 
+export const parseInputString = (inputString_) => {
+  inputString = inputString_;
+  pos = 0;
+}
+
 const Operator = {
   Plus: Symbol("Plus"),
   Minus: Symbol("Minus"),
@@ -24,7 +29,7 @@ const Function = {
   TAN: Symbol("TAN")
 };
 
-const Node = function() {
+export const Node = function() {
   this.isNumber;
   this.value;
   this.variableName;
@@ -148,7 +153,7 @@ const evaluateFunction = (node, value) => {
   }
 }
 
-const readExpression = (node) => {
+export const readExpression = (node) => {
   node.lchild = new Node();
   node.rchild = new Node();
 
@@ -207,7 +212,7 @@ const readExpression = (node) => {
   return node;
 }
 
-const computeExpression = (node) => {
+export const computeExpression = (node) => {
   let left, right;
   if(!node.lchild.isNumber)
     left = evaluateFunction(node.lchild, computeExpression(node.lchild));
@@ -227,7 +232,7 @@ const computeExpression = (node) => {
   }
 }
 
-const substituteVariable = (node, variable, value) => {
+export const substituteVariable = (node, variable, value) => {
   if(Array.isArray(variable)) {
     for(let i = 0; i < variable.length; ++ i)
       substituteVariable(node, variable[i], value[i]);
@@ -241,7 +246,7 @@ const substituteVariable = (node, variable, value) => {
   substituteVariable(node.rchild, variable, value);
 }
 
-const evaluateDerivative = (node, variable, value) => {
+export const evaluateDerivative = (node, variable, value) => {
   substituteVariable(node, variable, value + Math.sqrt(Number.EPSILON));
   let fPlus = computeExpression(node);
   substituteVariable(node, variable, value - Math.sqrt(Number.EPSILON));
@@ -250,15 +255,16 @@ const evaluateDerivative = (node, variable, value) => {
   return (fPlus - fMinus) / (2*Math.sqrt(Number.EPSILON));
 }
 
-const propagateUncertainty = (node, variable, value, delta) => {
+export const propagateUncertainty = (node, variable, value, delta) => {
   if(!Array.isArray(variable)) {
     return evaluateDerivative(node, variable, value) * delta;
   }
   let result = 0;
-  substituteVariable(node, value);
+  substituteVariable(node, variable, value);
   for(let i = 0; i < variable.length; ++ i) {
     let derivative = evaluateDerivative(node, variable[i], value[i]);
     result += derivative * derivative * delta[i] * delta[i];
   }
-  return sqrt(result);
+  return Math.sqrt(result);
 }
+

@@ -7,7 +7,15 @@
   </head>
   <body>
     <div class="header">Uncertainty Propagation Calculator</div>
-    <div class="var-manager-container"></div>
+    <div class="var-boxes-container">
+      <div class="var-box">
+        <button class="remove-variable">-</button>
+        <div class="var-box-right">
+          <input id="variable-name" type="text">
+          <button class="add-variable">+</button>
+        </div>
+      </div>
+    </div>
     <div class="expression-box">
       <input id="expression-input" type="text" value="Enter expression">
       <button class="calculate-button">Calculate</button>

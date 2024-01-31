@@ -12,6 +12,28 @@ body {
   text-align: center;
 }
 
+.var-box {
+  display: flex;
+  justify-content: center;  
+  gap: 5px;
+  padding: 10px;
+}
+
+.remove-variable {
+  align-self: flex-start;
+  padding: 0 16px;
+}
+
+.add-variable {
+  display: block;
+  margin: 10px auto;
+  padding: 0 30px;
+}
+
+#variable-name {
+  padding: 0px;
+}
+
 .expression-box {
   text-align: center; 
   padding: 10px;
