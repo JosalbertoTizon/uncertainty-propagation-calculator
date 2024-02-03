@@ -63,6 +63,7 @@ addVariableButton.addEventListener("click", createVarBox);
 removeVariableButton.addEventListener("click", removeVarBox);
 
 const calculateButton = document.querySelector(".calculate-button");
+const resultValue = document.querySelector(".result-value");
 
 calculateButton.addEventListener("click", () => {
   let variableAttributeArray = [[], [], []];
@@ -75,9 +76,15 @@ calculateButton.addEventListener("click", () => {
   });  
   let pouNode = new pou.Node();
   pou.parseInputString(expressionInput.value);
-  pou.readExpression(pouNode);
+  pouNode = pou.readExpression(pouNode);
   pou.substituteVariable(pouNode, variableAttributeArray[0], variableAttributeArray[1]);
-  alert(pou.propagateUncertainty(pouNode, variableAttributeArray[0], variableAttributeArray[1], variableAttributeArray[2]));
+  let resultNumericValue = pou.computeExpression(pouNode);
+  let resultError = pou.propagateUncertainty(pouNode, variableAttributeArray[0], variableAttributeArray[1], variableAttributeArray[2]);
+  if(Number.isNaN(resultNumericValue) || Number.isNaN(resultError)) {
+    resultValue.textContent = NaN;
+    return;
+  }
+  resultValue.textContent = resultNumericValue + "±" + resultError;
 })
 
 

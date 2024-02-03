@@ -1,6 +1,11 @@
 let inputString;
 let pos;
 
+const isAlphaNumeric = (str) => {
+  let alphaNumericPattern = /^[a-zA-Z0-9]+$/;
+  return alphaNumericPattern.test(str);
+}
+
 export const parseInputString = (inputString_) => {
   inputString = inputString_;
   pos = 0;
@@ -60,46 +65,47 @@ const skipWhitespace = () => {
 
 const getNumber = (node) => {
   let initialPos = pos;
-  while(!isNaN(inputString[pos]) || inputString[pos] == ".")
+  while(pos < inputString.length && (!isNaN(inputString[pos]) || inputString[pos] == "."))
     ++ pos;
   node.value = Number(inputString.slice(initialPos, pos));
 }
 
 const getVariable = (node) => {
-  node.variableName = inputString[pos];
-  ++ pos;
+  let initialPos = pos;
+  while(pos < inputString.length && isAlphaNumeric(inputString[pos])) 
+    ++ pos;
+  node.variableName = inputString.slice(initialPos, pos);
 }
 
 const readFunction = (node) => {
-  switch(inputString[pos]) {
-    case "(":
-      pos += 1;
-      node.function_ = Function.PARENTHESIS;
-      break;
-    case "e":
+  if(inputString[pos] == "(") {
+    pos += 1;
+    node.function_ = Function.PARENTHESIS;
+    return;
+  }
+
+  switch(inputString.slice(pos, pos + 2)) {
+    case "ex":
       pos += 4;
       node.function_ = Function.EXP;
       break;
-    case "l":
-      pos += 1;
-      if(inputString[pos] == "n") {
-        pos += 2;
-        node.function_ = Function.LN;
-      }
-      else {
-        pos += 3;
-        node.function_ = Function.LOG;
-      }
+    case "ln":
+      pos += 3;
+      node.function_ = Function.LN;
       break;
-    case "s":
+    case "lo":
+      pos += 4;
+      node.function_ = Function.LOG;
+      break;
+    case "si":
       pos += 4;
       node.function_ = Function.SIN;
       break;
-    case "c":
+    case "co":
       pos += 4;
       node.function_ = Function.COS;
       break;
-    case "t":
+    case "ta":
       pos += 4;
       node.function_ = Function.TAN;
       break;
