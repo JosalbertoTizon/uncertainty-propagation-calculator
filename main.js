@@ -70,9 +70,11 @@ calculateButton.addEventListener("click", () => {
   let varBoxesArray = varBoxesContainer.children;
   Array.from(varBoxesArray).forEach(element => {
     let variableInputArray = Array.from(element.lastElementChild.firstElementChild.children);
-    variableAttributeArray[0].push(variableInputArray[0].value)
-    variableAttributeArray[1].push(Number(variableInputArray[1].value))
-    variableAttributeArray[2].push(Number(variableInputArray[2].value))
+    if(!isNaN(variableInputArray[1].value) && !isNaN(variableInputArray[2].value)) {
+      variableAttributeArray[0].push(variableInputArray[0].value)
+      variableAttributeArray[1].push(Number(variableInputArray[1].value))
+      variableAttributeArray[2].push(Number(variableInputArray[2].value))
+    }
   });  
   let pouNode = new pou.Node();
   pou.parseInputString(expressionInput.value);
