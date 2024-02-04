@@ -84,7 +84,8 @@ calculateButton.addEventListener("click", () => {
     resultValue.textContent = NaN;
     return;
   }
-  resultValue.textContent = resultNumericValue + "±" + resultError;
+  let [approximatedNumericValue, approximatedErrorValue] = pou.approximateResult(resultNumericValue, resultError);
+  resultValue.textContent = approximatedNumericValue + " ± " + approximatedErrorValue;
 })
 
 

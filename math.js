@@ -274,3 +274,39 @@ export const propagateUncertainty = (node, variable, value, delta) => {
   return Math.sqrt(result);
 }
 
+const findFloatingPoint = (value) => {
+  for(let index = 0; index < value.length; ++ index)
+    if(value[index] == ".")
+      return index;
+  return value.length;
+}
+
+const findSignificativeDigit = (value) => {
+  for(let index = 0; index < value.length; ++ index) {
+    if(value[index] != "0" && value[index] != ".")
+      return index;
+  } 
+  return 0;
+}
+
+const roundNumber = (value, digit) => {
+  return Math.round(Number(value) * (10 ** digit)) / (10 ** digit);
+}
+
+export const approximateResult = (mainValue, errorValue) => {
+  mainValue = String(mainValue);
+  errorValue = String(errorValue);
+  let floatingPointError = findFloatingPoint(errorValue);
+  let significativeDigitIndex = findSignificativeDigit(errorValue);
+  let approximatedErrorValue, approximatedMainValue;
+  if(significativeDigitIndex < floatingPointError) {
+    approximatedErrorValue = roundNumber(errorValue, significativeDigitIndex - floatingPointError + 1);
+    approximatedMainValue = roundNumber(mainValue, significativeDigitIndex - floatingPointError + 1);
+  }
+  else {
+    approximatedErrorValue = roundNumber(errorValue, significativeDigitIndex - floatingPointError);
+    approximatedMainValue = roundNumber(mainValue, significativeDigitIndex - floatingPointError);
+  }
+  return [approximatedMainValue, approximatedErrorValue];
+}
+
