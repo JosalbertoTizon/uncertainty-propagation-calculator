@@ -6,28 +6,32 @@
     <script src="main.js" type="module" defer></script>
   </head>
   <body>
+    <div>
     <div class="header">Uncertainty Propagation Calculator</div>
-    <div class="var-boxes-container">
-      <div class="var-box">
-        <button class="remove-variable">-</button>
-        <div class="var-box-right">
-          <div class="variable">
-            <input class="variable-name" type="text" value="Name">
-            <input class="variable-value" type="text" value="Value">
-            <input class="variable-error" type="text" value="Error">
+      <div class="var-boxes-container">
+        <div class="var-box">
+          <button class="remove-variable">-</button>
+          <div class="var-box-right">
+            <div class="variable">
+              <input class="variable-name" type="text" value="Name">
+              <input class="variable-value" type="text" value="Value">
+              <input class="variable-error" type="text" value="Error">
+            </div>
+            <button class="add-variable">+</button>
           </div>
-          <button class="add-variable">+</button>
         </div>
       </div>
     </div>
-    <div class="expression-box">
-      <input id="expression-input" type="text" value="Enter expression">
-      <button class="calculate-button">Calculate</button>
+    <div>
+      <div class="expression-box">
+        <input id="expression-input" type="text" value="Enter expression">
+        <button class="calculate-button">Calculate</button>
+      </div>
+      <div class="results">
+        <div class="result-header">Result</div>
+        <div class="result-value">0</div>
+      </div>
+      <div class="footer">Footer</div>
     </div>
-    <div class="results">
-      <div class="result-header">Result</div>
-      <div class="result-value">0</div>
-    </div>
-    <div class="footer">Footer</div>
   </body>
 </html>
